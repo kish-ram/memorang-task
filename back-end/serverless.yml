@@ -1,0 +1,51 @@
+service: mmdb-backend
+
+frameworkVersion: ">=2.0.0"
+
+custom: ${file(./custom.yml)}
+
+# plugins:
+#   - serverless-add-api-key
+#   - serverless-plugin-warmup
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: ${self:custom.configs.${self:provider.stage}_REGION}
+  profile: kishore-aws
+  stage: ${opt:stage, 'dev'}
+  environment:
+    ENV: ${self:provider.stage}
+    REGION: ${self:provider.region}
+    TBL_NAME: ${self:custom.configs.TBL_NAME}
+  role: arn:aws:iam::205789618067:role/lambda-executor
+
+functions:
+  graphQL:
+    handler: src/api/graphql.graphqlHandler
+    events:
+      - http:
+          path: graphql
+          method: post
+          cors: true
+        
+resources:
+  Resources:
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
+    GatewayResponseDefault5XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_5XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'

@@ -1,0 +1,19 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.39.0",
+    "@aws-sdk/util-dynamodb": "^3.39.0",
+    "apollo-datasource-rest": "^3.3.0",
+    "apollo-server-lambda": "^3.4.0",
+    "graphql": "^16.0.1"
+  }
+}
