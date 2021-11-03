@@ -17,7 +17,8 @@ provider:
   environment:
     ENV: ${self:provider.stage}
     REGION: ${self:provider.region}
-    TBL_NAME: ${self:custom.configs.TBL_NAME}
+    FAV_TBL_NAME: ${self:custom.configs.FAV_TBL_NAME}
+    USER_TBL: ${self:custom.configs.USER_TBL}
   role: arn:aws:iam::205789618067:role/lambda-executor
 
 functions:
@@ -26,6 +27,20 @@ functions:
     events:
       - http:
           path: graphql
+          method: post
+          cors: true
+  signIn:
+    handler: src/api/signIn.signIn
+    events:
+      - http:
+          path: signIn
+          method: post
+          cors: true
+  signUp:
+    handler: src/api/signUp.signUp
+    events:
+      - http:
+          path: signUp
           method: post
           cors: true
         

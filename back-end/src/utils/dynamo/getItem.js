@@ -2,7 +2,7 @@ const { GetItemCommand } = require("@aws-sdk/client-dynamodb");
 const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
 const dynamoClient = require("./dynamodb");
 
-const getItem = async (additionalParams, tableName = process.env.TBL_NAME) => {
+const getItem = async (additionalParams, tableName = process.env.FAV_TBL_NAME) => {
   const params = {
     TableName: tableName,
     ...additionalParams,

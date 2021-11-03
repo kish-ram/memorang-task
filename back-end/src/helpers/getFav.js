@@ -5,7 +5,7 @@ module.exports = async ({userId, movieId}) => {
         Key: { userId, movieId },
     }
     try {
-        let resp = await getItem(params, process.env.TBL_NAME);
+        let resp = await getItem(params, process.env.FAV_TBL_NAME);
         console.log(resp);
         if(resp) {
             return resp;

@@ -1,13 +1,13 @@
 const { PutItemCommand } = require("@aws-sdk/client-dynamodb");
-const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
+const { marshall } = require("@aws-sdk/util-dynamodb");
 const dynamoClient = require("./dynamodb");
 
-const addFavorite = async (data) => {
+const addUser = async (data) => {
   const params = {
-    TableName: process.env.FAV_TBL_NAME,
+    TableName: process.env.USER_TBL,
     Item: marshall(data),
   };
   return await dynamoClient().send(new PutItemCommand(params));
 };
 
-module.exports = addFavorite;
+module.exports = addUser;

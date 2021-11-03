@@ -6,6 +6,6 @@ module.exports = async (userId) => {
         FilterExpression: { status: true}
     }
     console.log(params)
-    let resp = await getItem(params, process.env.TBL_NAME);
+    let resp = await getItem(params, process.env.FAV_TBL_NAME);
     console.log(resp);
 }

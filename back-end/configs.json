@@ -2,5 +2,6 @@
     "dev_REGION":"us-east-1",
     "uat_REGION":"us-east-2",
     "prod_REGION":"ap-south-1",
-    "TBL_NAME": "memorang-favorites"
+    "FAV_TBL_NAME": "memorang-favorites",
+    "USER_TBL": "memorang-users"
 }
