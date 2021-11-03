@@ -1,16 +1,17 @@
 const { gql } = require('apollo-server-lambda');
 
 const typeDefs = gql`
+  type Genres {
+    id:Int!,
+    name: String
+  }
+
   type Movie {
     id:Int!,
     title:String!,
     overview:String,
-    genre: [Genre],
-  }
-
-  type Genre {
-    id:Int!,
-    name: String
+    release_date:String
+    genres: [Genres],
   }
 
   type Favorite {
@@ -23,6 +24,7 @@ const typeDefs = gql`
   type Query {
     movie(id: Int!): Movie
     movies(title: String!): [Movie]
+    getFav(userId: String!, movieId: Int!): Favorite
     favorites(userId: String!): [Favorite]
   }
   type Mutation {

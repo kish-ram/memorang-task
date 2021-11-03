@@ -1,8 +1,8 @@
 const getItem = require('../utils/dynamo/getItem');
 
-module.exports = async (userId, movieId) => {
+module.exports = async (userId) => {
     const params = {
-        Key: { userId, movieId },
+        Key: { userId },
         FilterExpression: { status: true}
     }
     console.log(params)
