@@ -1,11 +1,10 @@
-const getItem = require('../utils/dynamo/getItem');
+const getFavorites = require('../utils/dynamo/getFavorites');
 
 module.exports = async (userId) => {
-    const params = {
-        Key: { userId },
-        FilterExpression: { status: true}
-    }
-    console.log(params)
-    let resp = await getItem(params, process.env.FAV_TBL_NAME);
+    let resp = await getFavorites(userId, process.env.FAV_TBL_NAME);
     console.log(resp);
+    if(resp) {
+        return resp;
+    }
+    return [];
 }
