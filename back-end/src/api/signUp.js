@@ -19,9 +19,10 @@ module.exports.signUp = async (event, context) => {
       const passwordHash = await passwordCryptor().genHash(password);
       userData.passwordHash = passwordHash;
       let resp = await addUser(userData);
+      console.log(resp);
       if(resp) {
           //TODO JWT
-        return (respond(200, { data: {email} }))
+        return (respond(200, { data: {email, userId:resp.userId} }))
       }
       throw Error('Error signing up!');
     } catch (err) {

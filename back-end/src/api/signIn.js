@@ -21,7 +21,7 @@ module.exports.signIn = async (event, context) => {
             return (respond(401, { message: 'Invalid password. Password doesn\'t match' }));
         }
         //TODO JWT
-      return (respond(200, { data: {email} }))
+      return (respond(200, { data: {email, userId: userData.userId} }))
     } catch (err) {
       console.error(err);
       return respond(500, { message: 'System error' });
