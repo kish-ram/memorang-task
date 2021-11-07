@@ -16,8 +16,6 @@ const movie = ({movie}) => {
       setLoggedIn(true);
     }
   },[])
-    console.log(movie)
-    console.log(isLoggedIn)
     // const router = useRouter();
     // const {id} = router.query;
     // return (<div>
@@ -28,6 +26,7 @@ const movie = ({movie}) => {
 
 export const getServerSideProps = async (context) => {
     let movieId = context.params.id;
+    let userId = context.req.cookies['memorang-user'];
     const client = new ApolloClient({
         uri: "https://2e8ui9n2p8.execute-api.us-east-1.amazonaws.com/dev/graphql",
         cache: new InMemoryCache(),
@@ -50,11 +49,20 @@ export const getServerSideProps = async (context) => {
           }
               `,
       });
-      if(loading) return "<div>Loading.!</div>";
-      if(error) return "<div>Errror.!</div>";
       console.log('hereee');
       console.log(data);
-      return { props: {movie: data.movie} };
+      let favResp = await client.query({
+        query: gql`
+        query {
+          getFav(userId: "${userId}", movieId: ${movieId}) {
+              status
+            }
+          }
+              `,
+      });
+      console.log('hereeefasdfasdf');
+      console.log(favResp.data);
+      return { props: {movie: {...data.movie, isFavorite:favResp.data.getFav.status}} };
 }
 
 export default movie;

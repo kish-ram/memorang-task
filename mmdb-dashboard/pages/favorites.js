@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Router from 'next/router';
@@ -26,13 +27,13 @@ export default function Favorite ({favorites}) {
           <Head>
             <title>{siteTitle}</title>
           </Head>
-          {favorites.length>0 && <Favorites favorites={favorites} isLoggedIn={isLoggedIn}/> }
+          {favorites.length>0 ? <Favorites favorites={favorites} isLoggedIn={isLoggedIn} /> : <p>No favorites added. <Link href='/search'>Search</Link> and add few!</p> }
         </div>
       );
 }
 
-export const getServerSideProps = async (context) => {
-    let userId = "1324";
+export const getServerSideProps = async ({req,res}) => {
+    let userId = req.cookies['memorang-user'];
     const client = new ApolloClient({
         uri: "https://2e8ui9n2p8.execute-api.us-east-1.amazonaws.com/dev/graphql",
         cache: new InMemoryCache(),
