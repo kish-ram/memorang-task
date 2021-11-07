@@ -1,4 +1,5 @@
 import axios from 'axios';
+import cookie from 'js-cookie'
 import { useState } from "react";
 import Link from 'next/link';
 import {
@@ -32,7 +33,10 @@ const SignUpForm = () => {
         if(data.status===200){
           console.log(data);
           localStorage.setItem("memorang-email", email);
+          localStorage.setItem("memorang-user", data.data.data.userId);
+          cookie.set("memorang-user", data.data.data.userId);
           setLoading(false);
+          Router.push('/search');
         }  
       } catch (error) {
         if(error.response.status === 400){

@@ -2,6 +2,7 @@ import Link from "next/link";
 import axios from 'axios';
 import { useState } from "react";
 import Router from 'next/router';
+import cookie from 'js-cookie'
 import {
   Form,
   FormControl,
@@ -33,6 +34,8 @@ const LoginForm = () => {
       if(data.status===200){
         console.log(data);
         localStorage.setItem("memorang-email", email);
+        localStorage.setItem("memorang-user", data.data.data.userId);
+        cookie.set("memorang-user", data.data.data.userId);
         setLoading(true);
         Router.push('/search');
       }  
