@@ -7,20 +7,21 @@ module.exports = async ({userId, movieId, title}) => {
     }
     try {
         let resp = await getItem(params, process.env.FAV_TBL_NAME);
+        console.log('resp');
         console.log(resp);
-        const data = {
+        let data = {
             userId, 
             movieId,
             title,
-            status: true
         }
-        if(resp) {
-            data.status = !resp.status;
+        if(resp===false){
+            data.status = false;
+        } else {
+            data.status = resp.status === false ? true : false;
         }
-        console.log('updatedData');
+        await addFavorite(data);
+        console.log('data');
         console.log(data);
-        resp = await addFavorite(data);
-        console.log(resp);
         return data;
 
     } catch (error) {
