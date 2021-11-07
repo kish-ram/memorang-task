@@ -13,6 +13,7 @@ const TopNavBar = () => {
      <Nav className="me-auto">
      <Link href="/login" passHref><Nav.Link>Login</Nav.Link></Link>
      <Link href="/search" passHref><Nav.Link>Search</Nav.Link></Link>
+     <Link href="/favorites" passHref><Nav.Link>Favorites</Nav.Link></Link>
      </Nav>
      </Container>
    </Navbar>
