@@ -1,4 +1,5 @@
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import MovieDetails from "../../../components/MovieDetails";
 import {
     ApolloClient,
@@ -9,13 +10,20 @@ import {
   } from "@apollo/client";
 
 const movie = ({movie}) => {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  useEffect(() => {
+    if(localStorage.getItem('memorang-email')){
+      setLoggedIn(true);
+    }
+  },[])
     console.log(movie)
+    console.log(isLoggedIn)
     // const router = useRouter();
     // const {id} = router.query;
     // return (<div>
     //     this is from movie {movie.id}
     // </div>)
-    return <MovieDetails {...movie}/>
+    return <MovieDetails {...movie} isLoggedIn={isLoggedIn}/>
 }
 
 export const getServerSideProps = async (context) => {

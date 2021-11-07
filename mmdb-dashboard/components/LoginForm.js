@@ -1,5 +1,7 @@
 import Link from "next/link";
+import axios from 'axios';
 import { useState } from "react";
+import Router from 'next/router';
 import {
   Form,
   FormControl,
@@ -9,15 +11,53 @@ import {
 } from "react-bootstrap";
 
 const LoginForm = () => {
-  const [validated, setValidated] = useState(false);
 
-  const handleSubmit = (event) => {
+  const [loading, setLoading] = useState(false);
+  const [validated, setValidated] = useState(false);
+  const [newUser, setNewUser] = useState(false);
+  const [invalidPassword, setInvalidPassword] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+
+  const loginHandler = async (event) => {
+    event.preventDefault();
+    const email = event.target[0].value;
+    const password = event.target[1].value;
+    try {
+      const data = await axios({
+        method: 'post',
+        url: 'https://2e8ui9n2p8.execute-api.us-east-1.amazonaws.com/dev/signIn',
+        data: {
+          email, password
+        }
+      });
+      if(data.status===200){
+        console.log(data);
+        localStorage.setItem("memorang-email", email);
+        setLoading(true);
+        Router.push('/search');
+      }  
+    } catch (error) {
+      if(error.response.status === 400){
+        setLoading(true);
+        setNewUser(true);
+      } else if(error.response.status === 401){
+        setInvalidPassword(true);
+      } else {
+        setLoginError(true);
+      }
+    }
+  }
+
+  const handleSubmit = async (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
     setValidated(true);
+    if (form.checkValidity()) {
+      await loginHandler(event);
+    }
   };
 
   return (
@@ -37,14 +77,16 @@ const LoginForm = () => {
             Please provide a password.
           </FormControl.Feedback>
       </FormGroup>
-      <Button variant="primary" type="submit">
+      {loading === false ? (<><Button variant="primary" type="submit">
         LogIn
-      </Button>
-      <span>
+      </Button><span>
       <Link href="/signup">
         <a style={{ textDecoration:"none", fontStyle: "italic", fontSize: "1em" }}>{" "}Create account?</a>
       </Link>
-      </span>
+      </span></>) : null}
+      {newUser === true ? <p>User doesnot exists! Signup <Link href='/signup'>here</Link></p> : null}
+      {invalidPassword === true ? <p>Please check the password and try again!</p> : null}
+      {loginError === true ? <p>Error logging in! Try again later</p> : null}
     </Form>
   );
 };

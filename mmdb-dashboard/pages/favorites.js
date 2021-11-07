@@ -1,4 +1,7 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import Router from 'next/router';
 import Favorites from '../components/Favorites';
 import {
     ApolloClient,
@@ -10,14 +13,20 @@ import {
 
 export const siteTitle = "MMDb | My Favorites";
 
-const favorite = ({favorites}) => {
+export default function Favorite ({favorites}) {
     console.log(favorites)
+    const [isLoggedIn, setLoggedIn] = useState(false);
+    useEffect(() => {
+      if(localStorage.getItem('memorang-email')){
+        setLoggedIn(true);
+      }
+    },[])
     return (
         <div>
           <Head>
             <title>{siteTitle}</title>
           </Head>
-          {favorites.length>0 && <Favorites favorites={favorites}/> }
+          {favorites.length>0 && <Favorites favorites={favorites} isLoggedIn={isLoggedIn}/> }
         </div>
       );
 }
@@ -45,5 +54,3 @@ export const getServerSideProps = async (context) => {
       console.log(data);
       return { props: {favorites: data.favorites} };
 }
-
-export default favorite;

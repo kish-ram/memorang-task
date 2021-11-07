@@ -1,12 +1,22 @@
 import Head from "next/head";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { FormControl } from "react-bootstrap";
 import MovieList from "../components/MovieList";
 
 export const siteTitle = "MMDb | Search";
 
 export default function Search() {
+  const router = useRouter();
+  console.log('router.query.loggedIn');
+  console.log(router.query.loggedIn);
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  useEffect(() => {
+    if(localStorage.getItem('memorang-email')){
+      setLoggedIn(true);
+    }
+  },[])
   let [moviesState, setMovies] = useState([]);
   const searchHandler = async (event) => {
     let searchSlug = event.target.value;

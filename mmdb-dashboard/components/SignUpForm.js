@@ -1,4 +1,6 @@
+import axios from 'axios';
 import { useState } from "react";
+import Link from 'next/link';
 import {
   Form,
   FormControl,
@@ -9,46 +11,65 @@ import {
 
 const SignUpForm = () => {
 
+    const [loading, setLoading] = useState(false);
     const [validated, setValidated] = useState(false);
+    const [existingUser, setExistingUser] = useState(false);
+    const [signUpError, setSignUpError] = useState(false);
 
-  const handleSubmit = (event) => {
+    const signUpHandler = async (event) => {
+      event.preventDefault();
+      const email = event.target[0].value;
+      const password = event.target[1].value;
+      setLoading(true);
+      try {
+        const data = await axios({
+          method: 'post',
+          url: 'https://2e8ui9n2p8.execute-api.us-east-1.amazonaws.com/dev/signUp',
+          data: {
+            email, password
+          }
+        });
+        if(data.status===200){
+          console.log(data);
+          localStorage.setItem("memorang-email", email);
+          setLoading(false);
+        }  
+      } catch (error) {
+        if(error.response.status === 400){
+          setExistingUser(true);
+        } else{
+          setSignUpError(true);
+        }
+      }
+    }
+    
+    const checkPasswords = (event) => {
+      if(event.target[1].value === "") {
+        return false;
+      } else if((event.target[2].value === "")){
+        return false;
+      } else if((event.target[1].value != event.target[2].value)){
+        event.target[2].setCustomValidity('Password Mismatch');
+        return false;
+      } else if(event.target[1].value === event.target[2].value) {
+        event.target[2].setCustomValidity('');
+        return true;
+      } else {
+        return true
+      }
+    }
+
+  const handleSubmit = async (event) => {
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
+    if (form.checkValidity() === false ||  checkPasswords(event) === false) {
       event.preventDefault();
       event.stopPropagation();
     }
-    console.log('here')
-    if(event.target[1].value != event.target[2].value){
-        console.log('if')
-        event.target[2].setCustomValidity('Password mismatch');
-        event.preventDefault();
-        event.stopPropagation();
-        setValidated(false);
-    }else {
-        console.log('else')
-        event.target[2].setCustomValidity('');
-        setValidated(true);
-        form.submit();
-    }
     setValidated(true);
+    if (form.checkValidity() &&  checkPasswords(event)) {
+      await signUpHandler(event);
+    }
   };
-
-//   const setPasswordState = (event) => {
-//       let currentPassword = event.target.value;
-//       setPassword(currentPassword);
-//   }
-
-//   const comparePswd = (event) => {
-//     console.log(event)
-//     let confirmPassword = event.target.value;
-//     console.log(confirmPassword)
-//     console.log(password)
-//     if(confirmPassword != password) {
-//         let form = event.nativeEvent.path[2];
-//         form.checkValidity(false);
-//         setValidated(false);   
-//     }
-//   }
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
@@ -75,10 +96,11 @@ const SignUpForm = () => {
             Password not matching.
           </FormControl.Feedback>
       </FormGroup>
-      
-      <Button variant="success" type="submit">
+      {loading === false ? <Button variant="success" type="submit">
         Sign Up
-      </Button>
+      </Button> : null}
+      {existingUser === true ? <p>User already exists! Try <Link href='/login'>login</Link></p> : null}
+      {signUpError === true ? <p>Error signing up! Try again later</p> : null}
     </Form>
   );
 };
