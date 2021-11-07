@@ -8,6 +8,11 @@ class MoviesAPI extends RESTDataSource {
 
   async getMovie(id) {
     const resp = await this.get(`movie/${id}?api_key=178e7bf675e0abd6aa255f320f583d29`);
+    resp.imageUrl = `https://image.tmdb.org/t/p/w500/${resp.poster_path}`;
+    let genre = resp.genres.map(el => {
+      return el.name;
+    })
+    resp.genre = genre;
     return resp;
   }
 

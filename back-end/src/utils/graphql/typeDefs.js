@@ -2,7 +2,6 @@ const { gql } = require('apollo-server-lambda');
 
 const typeDefs = gql`
   type Genres {
-    id:Int!,
     name: String
   }
 
@@ -10,7 +9,9 @@ const typeDefs = gql`
     id:Int!,
     title:String!,
     overview:String,
-    release_date:String
+    release_date:String,
+    imageUrl:String,
+    runtime:Int,
     genres: [Genres],
   }
 
